@@ -51,7 +51,7 @@ abstract class TfliteStyleTransferPlatform extends PlatformInterface {
   ///
   /// `styleFromAssets`: set to true if your style image is an asset
   /// of your app
-  /// 
+  ///
   Future<String?> runStyleTransfer({
     required String styleImagePath,
     required String imagePath,

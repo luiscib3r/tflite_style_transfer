@@ -18,7 +18,7 @@ jobs:
     with:
       flutter_channel: stable
       flutter_version: 3.0.0
-      working_directory: src/tflite_style_transfer
+      working_directory: packages/tflite_style_transfer
 
   android:
     runs-on: macos-latest
