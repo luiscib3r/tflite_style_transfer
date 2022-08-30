@@ -25,4 +25,22 @@ class TfliteStyleTransferIOS extends TfliteStyleTransferPlatform {
   Future<String?> getPlatformName() {
     return methodChannel.invokeMethod<String>('getPlatformName');
   }
+
+  @override
+  Future<String?> runStyleTransfer({
+    required String styleImagePath,
+    required String imagePath,
+    required bool styleFromAssets,
+  }) async {
+    final result = await methodChannel.invokeMethod<String?>(
+      'runStyleTransfer',
+      {
+        'styleImagePath': styleImagePath,
+        'imagePath': imagePath,
+        'styleFromAssets': styleFromAssets,
+      },
+    );
+
+    return result;
+  }
 }
