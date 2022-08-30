@@ -26,6 +26,11 @@ class TfliteStyleTransferMock extends TfliteStyleTransferPlatform {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  test('get instance of MethodChannelTfliteStyleTransfer', () {
+    TfliteStyleTransferPlatform.instance;
+  });
+
   group('TfliteStyleTransferPlatformInterface', () {
     late TfliteStyleTransferPlatform tfliteStyleTransferPlatform;
 
