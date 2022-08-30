@@ -29,12 +29,15 @@ class TFLiteStyleTransfer {
   ///
   /// `styleFromAssets`: set to true if your style image is an asset
   /// of your app
-  /// 
-  Future<String> runStyleTransfer({
+  ///
+  Future<String?> runStyleTransfer({
     required String styleImagePath,
     required String imagePath,
     bool styleFromAssets = false,
-  }) async {
-    return '';
-  }
+  }) =>
+      _platform.runStyleTransfer(
+        styleImagePath: styleImagePath,
+        imagePath: imagePath,
+        styleFromAssets: styleFromAssets,
+      );
 }

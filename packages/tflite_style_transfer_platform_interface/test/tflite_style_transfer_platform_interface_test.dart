@@ -13,6 +13,14 @@ class TfliteStyleTransferMock extends TfliteStyleTransferPlatform {
 
   @override
   Future<String?> getPlatformName() async => mockPlatformName;
+
+  @override
+  Future<String?> runStyleTransfer({
+    required String styleImagePath,
+    required String imagePath,
+    required bool styleFromAssets,
+  }) async =>
+      'some_path/generated.png';
 }
 
 void main() {

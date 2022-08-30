@@ -40,4 +40,21 @@ abstract class TfliteStyleTransferPlatform extends PlatformInterface {
 
   /// Return the current platform name.
   Future<String?> getPlatformName();
+
+  /// Run style transfer model
+  ///
+  /// Returns the path of generated image
+  ///
+  /// `styleImagePath`: path of the style image
+  ///
+  /// `imagePath`: path of de original image
+  ///
+  /// `styleFromAssets`: set to true if your style image is an asset
+  /// of your app
+  /// 
+  Future<String?> runStyleTransfer({
+    required String styleImagePath,
+    required String imagePath,
+    required bool styleFromAssets,
+  });
 }
