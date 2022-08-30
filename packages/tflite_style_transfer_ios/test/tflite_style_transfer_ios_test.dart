@@ -15,6 +15,7 @@ void main() {
 
   group('TfliteStyleTransferIOS', () {
     const kPlatformName = 'iOS';
+    const kGeneratedImagePath = 'some_path/generated.png';
     late TfliteStyleTransferIOS tfliteStyleTransfer;
     late List<MethodCall> log;
 
@@ -29,6 +30,8 @@ void main() {
         switch (methodCall.method) {
           case 'getPlatformName':
             return kPlatformName;
+          case 'runStyleTransfer':
+            return kGeneratedImagePath;
           default:
             return null;
         }
@@ -50,6 +53,30 @@ void main() {
         <Matcher>[isMethodCall('getPlatformName', arguments: null)],
       );
       expect(name, equals(kPlatformName));
+    });
+
+    test('runStyleTransfer returns generated image path', () async {
+      final result = await tfliteStyleTransfer.runStyleTransfer(
+        imagePath: 'imagePath',
+        styleImagePath: 'styleImagePath',
+        styleFromAssets: true,
+      );
+
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'runStyleTransfer',
+            arguments: {
+              'styleImagePath': 'styleImagePath',
+              'imagePath': 'imagePath',
+              'styleFromAssets': true,
+            },
+          )
+        ],
+      );
+
+      expect(result, equals(kGeneratedImagePath));
     });
   });
 }

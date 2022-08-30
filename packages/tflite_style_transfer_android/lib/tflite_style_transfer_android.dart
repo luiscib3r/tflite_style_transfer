@@ -31,8 +31,8 @@ class TfliteStyleTransferAndroid extends TfliteStyleTransferPlatform {
     required String styleImagePath,
     required String imagePath,
     required bool styleFromAssets,
-  }) async {
-    final result = await methodChannel.invokeMethod<String?>(
+  }) {
+    return methodChannel.invokeMethod<String?>(
       'runStyleTransfer',
       {
         'styleImagePath': styleImagePath,
@@ -40,7 +40,5 @@ class TfliteStyleTransferAndroid extends TfliteStyleTransferPlatform {
         'styleFromAssets': styleFromAssets,
       },
     );
-
-    return result;
   }
 }

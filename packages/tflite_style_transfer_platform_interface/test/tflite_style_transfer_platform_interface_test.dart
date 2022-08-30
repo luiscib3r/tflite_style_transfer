@@ -10,6 +10,7 @@ import 'package:tflite_style_transfer_platform_interface/tflite_style_transfer_p
 
 class TfliteStyleTransferMock extends TfliteStyleTransferPlatform {
   static const mockPlatformName = 'Mock';
+  static const mockGeneratedPath = 'some_path/generated.png';
 
   @override
   Future<String?> getPlatformName() async => mockPlatformName;
@@ -20,7 +21,7 @@ class TfliteStyleTransferMock extends TfliteStyleTransferPlatform {
     required String imagePath,
     required bool styleFromAssets,
   }) async =>
-      'some_path/generated.png';
+      mockGeneratedPath;
 }
 
 void main() {
@@ -38,6 +39,19 @@ void main() {
         expect(
           await TfliteStyleTransferPlatform.instance.getPlatformName(),
           equals(TfliteStyleTransferMock.mockPlatformName),
+        );
+      });
+    });
+
+    group('runStyleTransfer', () {
+      test('returns path of generated image', () async {
+        expect(
+          await TfliteStyleTransferPlatform.instance.runStyleTransfer(
+            imagePath: 'imagePath',
+            styleImagePath: 'styleImagePath',
+            styleFromAssets: true,
+          ),
+          equals(TfliteStyleTransferMock.mockGeneratedPath),
         );
       });
     });

@@ -20,9 +20,11 @@ void main() {
 
   group('TfliteStyleTransfer', () {
     late TfliteStyleTransferPlatform tfliteStyleTransferPlatform;
+    late TFLiteStyleTransfer tfLiteStyleTransfer;
 
     setUp(() {
       tfliteStyleTransferPlatform = MockTfliteStyleTransferPlatform();
+      tfLiteStyleTransfer = TFLiteStyleTransfer();
       TfliteStyleTransferPlatform.instance = tfliteStyleTransferPlatform;
     });
 
@@ -45,6 +47,48 @@ void main() {
         ).thenAnswer((_) async => null);
 
         expect(getPlatformName, throwsException);
+      });
+    });
+
+    group('runStyleTransfer', () {
+      test('returns generated image path when platform implementation exists',
+          () async {
+        const generatedPath = 'some_path/generated.png';
+        when(
+          () => tfliteStyleTransferPlatform.runStyleTransfer(
+            imagePath: any(named: 'imagePath'),
+            styleImagePath: any(named: 'styleImagePath'),
+            styleFromAssets: any(named: 'styleFromAssets'),
+          ),
+        ).thenAnswer((_) async => generatedPath);
+
+        final result = await tfliteStyleTransferPlatform.runStyleTransfer(
+          imagePath: 'imagePath',
+          styleImagePath: 'styleImagePath',
+          styleFromAssets: true,
+        );
+
+        expect(result, equals(generatedPath));
+      });
+
+      test('throws exception when platform implementation is missing',
+          () async {
+        when(
+          () => tfliteStyleTransferPlatform.runStyleTransfer(
+            imagePath: any(named: 'imagePath'),
+            styleImagePath: any(named: 'styleImagePath'),
+            styleFromAssets: any(named: 'styleFromAssets'),
+          ),
+        ).thenAnswer((_) async => null);
+
+        expect(
+          tfLiteStyleTransfer.runStyleTransfer(
+            imagePath: 'imagePath',
+            styleImagePath: 'styleImagePath',
+            styleFromAssets: true,
+          ),
+          throwsException,
+        );
       });
     });
   });

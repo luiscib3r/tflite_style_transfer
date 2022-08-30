@@ -34,10 +34,14 @@ class TFLiteStyleTransfer {
     required String styleImagePath,
     required String imagePath,
     bool styleFromAssets = false,
-  }) =>
-      _platform.runStyleTransfer(
-        styleImagePath: styleImagePath,
-        imagePath: imagePath,
-        styleFromAssets: styleFromAssets,
-      );
+  }) async {
+    final result = await _platform.runStyleTransfer(
+      styleImagePath: styleImagePath,
+      imagePath: imagePath,
+      styleFromAssets: styleFromAssets,
+    );
+
+    if (result == null) throw Exception('Unable to run style transfer.');
+    return result;
+  }
 }

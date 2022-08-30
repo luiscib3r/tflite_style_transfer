@@ -12,6 +12,7 @@ import 'package:tflite_style_transfer_platform_interface/src/method_channel_tfli
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   const kPlatformName = 'platformName';
+  const kGeneratedPath = 'some_path/generated_image.png';
 
   group('$MethodChannelTfliteStyleTransfer', () {
     late MethodChannelTfliteStyleTransfer methodChannelTfliteStyleTransfer;
@@ -24,6 +25,8 @@ void main() {
           switch (methodCall.method) {
             case 'getPlatformName':
               return kPlatformName;
+            case 'runStyleTransfer':
+              return kGeneratedPath;
             default:
               return null;
           }
@@ -40,6 +43,30 @@ void main() {
         <Matcher>[isMethodCall('getPlatformName', arguments: null)],
       );
       expect(platformName, equals(kPlatformName));
+    });
+
+    test('runStyleTransfer', () async {
+      final platformName =
+          await methodChannelTfliteStyleTransfer.runStyleTransfer(
+        imagePath: 'imagePath',
+        styleImagePath: 'styleImagePath',
+        styleFromAssets: true,
+      );
+
+      expect(
+        log,
+        <Matcher>[
+          isMethodCall(
+            'runStyleTransfer',
+            arguments: {
+              'styleImagePath': 'styleImagePath',
+              'imagePath': 'imagePath',
+              'styleFromAssets': true,
+            },
+          ),
+        ],
+      );
+      expect(platformName, equals(kGeneratedPath));
     });
   });
 }
