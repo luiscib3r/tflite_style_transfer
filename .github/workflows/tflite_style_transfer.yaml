@@ -4,13 +4,13 @@ on:
   pull_request:
     paths:
       - ".github/workflows/tflite_style_transfer.yaml"
-      - "src/tflite_style_transfer/**"
+      - "packages/tflite_style_transfer/**"
   push:
     branches:
       - main
     paths:
       - ".github/workflows/tflite_style_transfer.yaml"
-      - "src/tflite_style_transfer/**"
+      - "packages/tflite_style_transfer/**"
 
 jobs:
   build:
@@ -25,7 +25,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: src/tflite_style_transfer/example
+        working-directory: packages/tflite_style_transfer/example
 
     steps:
       - uses: actions/checkout@v2
@@ -63,14 +63,14 @@ jobs:
         with:
           api-level: 29
           script: flutter test integration_test
-          working-directory: src/tflite_style_transfer/example
+          working-directory: packages/tflite_style_transfer/example
 
   ios:
     runs-on: macos-latest
 
     defaults:
       run:
-        working-directory: src/tflite_style_transfer/example
+        working-directory: packages/tflite_style_transfer/example
 
     steps:
       - uses: actions/checkout@v2
@@ -91,7 +91,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: src/tflite_style_transfer/example
+        working-directory: packages/tflite_style_transfer/example
 
     steps:
       - uses: actions/checkout@v2
@@ -117,7 +117,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: src/tflite_style_transfer/example
+        working-directory: packages/tflite_style_transfer/example
 
     steps:
       - uses: actions/checkout@v2
@@ -138,7 +138,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: src/tflite_style_transfer/example
+        working-directory: packages/tflite_style_transfer/example
 
     steps:
       - uses: actions/checkout@v2
@@ -164,7 +164,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: src/tflite_style_transfer/example
+        working-directory: packages/tflite_style_transfer/example
 
     steps:
       - uses: actions/checkout@v2
@@ -175,7 +175,7 @@ jobs:
         run: flutter config --enable-windows-desktop
 
       - name: Flutter Doctor
-        run: flutter doctor -v      
+        run: flutter doctor -v
 
       - name: Integration Tests
         run: flutter test integration_test -d windows
