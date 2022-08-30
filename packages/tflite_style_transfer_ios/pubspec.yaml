@@ -1,0 +1,28 @@
+name: tflite_style_transfer_ios
+description: iOS implementation of the tflite_style_transfer plugin
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+  flutter: ">=3.0.0"
+
+flutter:
+  plugin:
+    implements: tflite_style_transfer
+    platforms:
+      ios:
+        pluginClass: TfliteStyleTransferIosPlugin
+        dartPluginClass: TfliteStyleTransferIOS
+
+dependencies:
+  flutter:
+    sdk: flutter
+  tflite_style_transfer_platform_interface:
+    path: ../tflite_style_transfer_platform_interface
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.0
+  very_good_analysis: ^3.0.1

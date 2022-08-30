@@ -1,0 +1,15 @@
+name: tflite_style_transfer
+
+repository: https://github.com/luiscib3r/tflite_style_transfer
+
+packages:
+  - packages/**
+
+command:
+  bootstrap:
+    usePubspecOverrides: true
+
+  version:
+    branch: main
+    linkToCommits: true
+    workspaceChangelog: true

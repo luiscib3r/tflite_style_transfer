@@ -1,0 +1,21 @@
+name: tflite_style_transfer_android
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/tflite_style_transfer_android.yaml"
+      - "src/tflite_style_transfer_android/**"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/tflite_style_transfer_android.yaml"
+      - "src/tflite_style_transfer_android/**"
+
+jobs:
+  build:
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
+    with:
+      flutter_channel: stable
+      flutter_version: 3.0.0
+      working_directory: src/tflite_style_transfer_android

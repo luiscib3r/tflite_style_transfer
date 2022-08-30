@@ -1,0 +1,36 @@
+name: tflite_style_transfer_example
+description: Demonstrates how to use the tflite_style_transfer plugin.
+version: 0.1.0+1
+publish_to: none
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  image_picker: ^0.8.5+3
+  share_plus: ^4.0.10+1
+  tflite_style_transfer:
+    # When depending on this package from a real application you should use:
+    #   tflite_style_transfer: ^x.y.z
+    # See https://dart.dev/tools/pub/dependencies#version-constraints
+    # The example app is bundled with the plugin so we use a path dependency on
+    # the parent directory to use the current plugin's version.
+    path: ../
+
+dev_dependencies:
+  flutter_driver:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  very_good_analysis: ^3.0.1
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/styles/

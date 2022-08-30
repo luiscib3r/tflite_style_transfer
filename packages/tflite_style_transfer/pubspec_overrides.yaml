@@ -1,0 +1,8 @@
+# melos_managed_dependency_overrides: tflite_style_transfer_android,tflite_style_transfer_ios,tflite_style_transfer_platform_interface
+dependency_overrides:
+  tflite_style_transfer_android:
+    path: ../tflite_style_transfer_android
+  tflite_style_transfer_ios:
+    path: ../tflite_style_transfer_ios
+  tflite_style_transfer_platform_interface:
+    path: ../tflite_style_transfer_platform_interface

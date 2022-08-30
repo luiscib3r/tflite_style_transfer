@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "./packages/tflite_style_transfer"
+		},
+		{
+			"path": "./packages/tflite_style_transfer_platform_interface"
+		},
+		{
+			"path": "./packages/tflite_style_transfer_ios"
+		},
+		{
+			"path": "./packages/tflite_style_transfer_android"
+		},
+		{
+			"path": "./packages/tflite_style_transfer/example"
+		},
+	],
+	"settings": {}
+}
