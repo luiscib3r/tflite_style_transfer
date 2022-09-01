@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="dev.luisciber.example">
+    package="dev.luisciber.tflite_style_transfer_example">
    <application
-        android:label="example"
+        android:label="Flutter Style Transfer"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
