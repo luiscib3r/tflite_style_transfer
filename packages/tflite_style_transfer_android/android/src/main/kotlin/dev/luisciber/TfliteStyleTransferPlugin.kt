@@ -1,9 +1,7 @@
 package dev.luisciber
 
 import android.content.Context
-import android.content.res.AssetFileDescriptor
 import android.graphics.Bitmap
-import android.net.Uri
 import android.util.Log
 import androidx.annotation.NonNull
 
@@ -12,9 +10,11 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import kotlinx.coroutines.*
 import java.io.*
 import java.lang.Exception
 import java.util.*
+import java.util.concurrent.Executors
 
 class TfliteStyleTransferPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channel: MethodChannel
@@ -22,6 +22,11 @@ class TfliteStyleTransferPlugin : FlutterPlugin, MethodCallHandler {
     private var cpuStyleTransfer: StyleTransfer? = null
     private var gpuStyleTransfer: StyleTransfer? = null
     private lateinit var flutterAssets: FlutterPlugin.FlutterAssets
+
+    private val mainScope = MainScope()
+    private val modelJob = Job()
+    private val modelScope = CoroutineScope(modelJob)
+    private val inferenceThread = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(
@@ -35,16 +40,20 @@ class TfliteStyleTransferPlugin : FlutterPlugin, MethodCallHandler {
 
         flutterAssets = flutterPluginBinding.flutterAssets
 
-        try {
-            cpuStyleTransfer = StyleTransfer.newCPUStyleTransfer(context)
-        } catch (e: Exception) {
-            Log.d(StyleTransfer.TAG, "Error cpuStyleTransfer")
+        mainScope.launch {
+            try {
+                cpuStyleTransfer = StyleTransfer.newCPUStyleTransfer(context)
+            } catch (e: Exception) {
+                Log.d(StyleTransfer.TAG, "Error cpuStyleTransfer")
+            }
         }
 
-        try {
-            gpuStyleTransfer = StyleTransfer.newGPUStyleTransfer(context)
-        } catch (e: Exception) {
-            Log.d(StyleTransfer.TAG, "Error gpuStyleTransfer")
+        mainScope.launch {
+            try {
+                gpuStyleTransfer = StyleTransfer.newGPUStyleTransfer(context)
+            } catch (e: Exception) {
+                Log.d(StyleTransfer.TAG, "Error gpuStyleTransfer")
+            }
         }
     }
 
@@ -59,14 +68,16 @@ class TfliteStyleTransferPlugin : FlutterPlugin, MethodCallHandler {
                 val styleFromAssets = call.argument<Boolean>("styleFromAssets")
 
                 if (styleImagePath != null && imagePath != null && styleFromAssets != null) {
-                    val generatedImagePath = runStyleTransfer(
-                        styleImagePath, imagePath, styleFromAssets
-                    )
+                    modelScope.launch(inferenceThread) {
+                        val generatedImagePath = runStyleTransfer(
+                            styleImagePath, imagePath, styleFromAssets
+                        )
 
-                    if (generatedImagePath != null) {
-                        result.success(generatedImagePath)
-                    } else {
-                        result.error("-1", "StyleTransfer generation error", null)
+                        if (generatedImagePath != null) {
+                            result.success(generatedImagePath)
+                        } else {
+                            result.error("-1", "StyleTransfer generation error", null)
+                        }
                     }
                 } else {
                     result.error(
@@ -141,7 +152,7 @@ class TfliteStyleTransferPlugin : FlutterPlugin, MethodCallHandler {
 
     private fun copyFile(input: InputStream, output: OutputStream) {
         val buffer = ByteArray(1024)
-        var read: Int;
+        var read: Int
 
         do {
             read = input.read(buffer)
