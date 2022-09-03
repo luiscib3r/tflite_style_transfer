@@ -1,6 +1,6 @@
 name: tflite_style_transfer_example
 description: Demonstrates how to use the tflite_style_transfer plugin.
-version: 0.1.0+1
+version: 0.1.1
 publish_to: none
 
 environment:

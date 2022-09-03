@@ -1,6 +1,6 @@
 name: tflite_style_transfer
 description: Tensorflow Lite Style Transfer Model.
-version: 0.1.0+1
+version: 0.1.1
 publish_to: none
 
 environment:
