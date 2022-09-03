@@ -46,6 +46,8 @@ class _HomePageState extends State<HomePage> {
     (index) => 'assets/styles/style$index.jpg',
   );
 
+  bool loading = false;
+
   // Image's path
   String? imagePath;
   String? stylePath;
@@ -66,6 +68,10 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> generateImage() async {
     if (imagePath != null && stylePath != null) {
+      setState(() {
+        loading = true;
+      });
+
       final result = await styleTransfer.runStyleTransfer(
         styleImagePath: stylePath!,
         imagePath: imagePath!,
@@ -73,6 +79,7 @@ class _HomePageState extends State<HomePage> {
       );
 
       setState(() {
+        loading = false;
         generatedPath = result;
       });
     }
@@ -98,211 +105,221 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: SafeArea(
-        child: Column(
+        child: Stack(
+          fit: StackFit.expand,
           children: [
-            if (imagePath != null)
-              Expanded(
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: Image.file(imageFile!),
-                      ),
-                    ),
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              stylePath = null;
-                              if (generatedPath != null) {
-                                generatedPath = null;
-                                stylePath = null;
-                              } else {
-                                imagePath = null;
-                              }
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.cancel,
-                            size: 32,
-                            color: Colors.red,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            else
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(12),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(
-                            Icons.photo,
-                            size: 64,
-                          ),
-                        ],
-                      ),
-                      const Text('Take an image from camera or gallery')
-                    ],
-                  ),
-                ),
-              ),
-            const SizedBox(height: 22),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            Column(
               children: [
-                IconButton(
-                  onPressed: () {
-                    imagePicker.pickImage(source: ImageSource.camera).then(
-                      (value) {
-                        setState(() {
-                          imagePath = value?.path;
-                          generatedPath = null;
-                        });
-                      },
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.camera,
-                    size: 48,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    imagePicker.pickImage(source: ImageSource.gallery).then(
-                      (value) {
-                        setState(() {
-                          imagePath = value?.path;
-                          generatedPath = null;
-                        });
-                      },
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.photo,
-                    size: 48,
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(height: 32),
-            SizedBox(
-              height: 128,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: styleImages.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        margin: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              stylePath = null;
-                              generatedPath = null;
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.do_not_disturb_alt_outlined,
-                            size: 48,
+                if (imagePath != null)
+                  Expanded(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.file(imageFile!),
                           ),
                         ),
-                      ),
-                    );
-                  }
-
-                  final style = styleImages[index - 1];
-
-                  return Stack(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.all(4),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(16),
-                          onTap: () {
-                            if (imagePath != null) {
-                              setState(() {
-                                stylePath = style;
-                              });
-                              generateImage();
-                            } else {
-                              ScaffoldMessenger.of(context).showMaterialBanner(
-                                MaterialBanner(
-                                  content: const Text(
-                                    'Take an image before set style',
-                                  ),
-                                  actions: [
-                                    IconButton(
-                                      onPressed: () {
-                                        ScaffoldMessenger.of(context)
-                                            .clearMaterialBanners();
-                                      },
-                                      icon: const Icon(Icons.close),
-                                    )
-                                  ],
-                                ),
-                              );
-                            }
-                          },
+                        Positioned(
+                          top: 0,
+                          right: 0,
                           child: Padding(
                             padding: const EdgeInsets.all(8),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: Image.asset(
-                                style,
-                                width: 100,
-                                height: 100,
+                            child: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  stylePath = null;
+                                  if (generatedPath != null) {
+                                    generatedPath = null;
+                                    stylePath = null;
+                                  } else {
+                                    imagePath = null;
+                                  }
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.cancel,
+                                size: 32,
+                                color: Colors.red,
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      if (stylePath == style)
-                        const Positioned(
-                          right: 0,
-                          child: Icon(
-                            Icons.check_circle,
-                            size: 32,
-                            color: Colors.red,
-                          ),
+                      ],
+                    ),
+                  )
+                else
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
                         ),
-                    ],
-                  );
-                },
-              ),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(
+                                Icons.photo,
+                                size: 64,
+                              ),
+                            ],
+                          ),
+                          const Text('Take an image from camera or gallery')
+                        ],
+                      ),
+                    ),
+                  ),
+                const SizedBox(height: 22),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        imagePicker.pickImage(source: ImageSource.camera).then(
+                          (value) {
+                            setState(() {
+                              imagePath = value?.path;
+                              generatedPath = null;
+                            });
+                          },
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.camera,
+                        size: 48,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        imagePicker.pickImage(source: ImageSource.gallery).then(
+                          (value) {
+                            setState(() {
+                              imagePath = value?.path;
+                              generatedPath = null;
+                            });
+                          },
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.photo,
+                        size: 48,
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 32),
+                SizedBox(
+                  height: 128,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: styleImages.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            margin: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  stylePath = null;
+                                  generatedPath = null;
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.do_not_disturb_alt_outlined,
+                                size: 48,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+
+                      final style = styleImages[index - 1];
+
+                      return Stack(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.all(4),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(16),
+                              onTap: () {
+                                if (imagePath != null) {
+                                  setState(() {
+                                    stylePath = style;
+                                  });
+                                  generateImage();
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showMaterialBanner(
+                                    MaterialBanner(
+                                      content: const Text(
+                                        'Take an image before set style',
+                                      ),
+                                      actions: [
+                                        IconButton(
+                                          onPressed: () {
+                                            ScaffoldMessenger.of(context)
+                                                .clearMaterialBanners();
+                                          },
+                                          icon: const Icon(Icons.close),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: Image.asset(
+                                    style,
+                                    width: 100,
+                                    height: 100,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (stylePath == style)
+                            const Positioned(
+                              right: 0,
+                              child: Icon(
+                                Icons.check_circle,
+                                size: 32,
+                                color: Colors.red,
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
+            if (loading)
+              const Center(
+                child: CircularProgressIndicator(),
+              )
           ],
         ),
       ),
