@@ -1,7 +1,7 @@
 name: tflite_style_transfer
 description: Tensorflow Lite Style Transfer Model.
 version: 0.1.1
-publish_to: none
+repository: https://github.com/luiscib3r/tflite_style_transfer
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -18,12 +18,9 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
-  tflite_style_transfer_android:
-    path: ../tflite_style_transfer_android
-  tflite_style_transfer_ios:
-    path: ../tflite_style_transfer_ios
-  tflite_style_transfer_platform_interface:
-    path: ../tflite_style_transfer_platform_interface
+  tflite_style_transfer_android: ^0.1.1
+  tflite_style_transfer_ios: ^0.1.1
+  tflite_style_transfer_platform_interface: ^0.1.1
 
 dev_dependencies:
   flutter_test:
